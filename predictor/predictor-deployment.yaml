@@ -15,4 +15,15 @@ spec:
       containers:
         - name: predictor
           image: predictor-app:latest
+          env:
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "123456"
+            - name: DB_HOST
+              value: "mariadb-service"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "maga"
           imagePullPolicy: IfNotPresent
