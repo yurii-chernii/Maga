@@ -1,0 +1,12 @@
+# Базовий образ
+FROM python:3.9-slim
+
+# Встановлення залежностей
+RUN pip install flask mysql-connector-python
+
+# Копіювання скрипта в контейнер
+WORKDIR /app
+COPY api.py .
+
+# Встановлюємо скрипт за замовчуванням
+CMD ["python", "api.py"]

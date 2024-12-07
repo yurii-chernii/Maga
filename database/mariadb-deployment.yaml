@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:10.5
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456"
+            - name: MYSQL_DATABASE
+              value: "maga"
+          ports:
+            - containerPort: 3306
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - |
+                    echo "Waiting for MariaDB to be ready..."
+                    until mysqladmin -h 127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD status; do
+                      echo "MariaDB not ready yet..."
+                      sleep 2
+                    done
+                    echo "MariaDB is ready. Running init SQL script."
+                    mysql -h 127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD < /init.sql
+          volumeMounts:
+            - name: sql-init
+              mountPath: /init.sql
+              subPath: init.sql
+      volumes:
+        - name: sql-init
+          configMap:
+            name: mariadb-init-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-service
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - protocol: TCP
+      port: 3306 # The port inside the cluster
+      targetPort: 3306 # The port exposed by the container
+      nodePort: 30036 # Exposing it on this port on the node
+  type: NodePort

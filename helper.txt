@@ -1,0 +1,14 @@
+& minikube docker-env | Invoke-Expression
+& minikube -p minikube docker-env | Invoke-Expression
+
+
+docker login
+docker images
+docker build -t predictor-app .
+
+
+kubectl port-forward svc/mariadb-service 3307:3306
+kubectl port-forward svc/python-app-service 5000:5000
+
+
+kubectl create configmap mariadb-init-sql --from-file=init.sql

@@ -1,0 +1,6 @@
+pymysql
+tensorflow==2.13.0
+numpy
+scikit-learn
+matplotlib
+schedule
