@@ -12,3 +12,10 @@ kubectl port-forward svc/python-app-service 5000:5000
 
 
 kubectl create configmap mariadb-init-sql --from-file=init.sql
+
+
+kubectl get pods -n keda
+kubectl logs -l app=keda-operator -n keda
+kubectl logs -l app=keda-operator -n keda --tail=100
+kubectl apply -f python-app-scaledobject.yaml
+kubectl rollout restart deployment keda-operator -n keda

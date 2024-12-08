@@ -1,0 +1,23 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: python-app-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: python-app
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  pollingInterval: 30 # Check every 30 seconds
+  cooldownPeriod: 60 # Wait for 60 seconds before scaling down
+  triggers:
+    - type: mysql
+      metadata:
+        host: "mariadb-service.default.svc.cluster.local"
+        port: "3306"
+        dbName: "maga"
+        username: "root"
+        passwordFromEnv: "DB_PASSWORD"
+        query: "SELECT count_of_instances FROM predictions WHERE hour = DATE_FORMAT(NOW(), '%Y-%m-%d %H:00:00')"
+        queryValue: "1"
+        targetValue: "1" # TargetValue set to 1 so scaling maps directly to prediction
