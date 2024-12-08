@@ -21,3 +21,11 @@ spec:
         query: "SELECT count_of_instances FROM predictions WHERE hour = DATE_FORMAT(NOW(), '%Y-%m-%d %H:00:00')"
         queryValue: "1"
         targetValue: "1" # TargetValue set to 1 so scaling maps directly to prediction
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "80" # Scale if CPU utilization exceeds 80%
+    - type: memory
+      metricType: Utilization
+      metadata:
+        value: "80" # Scale if memory utilization exceeds 80%

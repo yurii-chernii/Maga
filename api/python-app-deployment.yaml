@@ -29,6 +29,13 @@ spec:
           ports:
             - containerPort: 5000
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m" # CPU request
+              memory: "256Mi" # Memory request
+            limits:
+              cpu: "500m" # CPU limit
+              memory: "512Mi" # Memory limit
 ---
 apiVersion: v1
 kind: Service
