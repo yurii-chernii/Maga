@@ -19,3 +19,4 @@ kubectl logs -l app=keda-operator -n keda
 kubectl logs -l app=keda-operator -n keda --tail=100
 kubectl apply -f python-app-scaledobject.yaml
 kubectl rollout restart deployment keda-operator -n keda
+kubectl get hpa
